@@ -1,0 +1,39 @@
+
+services:
+  litellm-proxy:
+    image: ghcr.io/berriai/litellm:main-stable
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    volumes:
+      - ./litellm-config.yaml:/app/config.yaml
+    env_file:
+      - ./.env
+    ports:
+      - "4000:4000"
+    networks:
+      - ai-kiosk-network
+
+  openwebui-app:
+    image: ghcr.io/open-webui/open-webui:main
+    depends_on:
+      - litellm-proxy
+    environment:
+      - WEBUI_AUTH=False
+      - OPENAI_API_BASE_URL=http://litellm-proxy:4000/v1
+      - ENABLE_RAG_WEB_SEARCH=False
+      - ENABLE_RAG_LOCAL_WEB_FETCH=False
+      - RAG_EMBEDDING_ENGINE=
+      - SENTENCE_TRANSFORMERS_HOME=/tmp
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - open-webui:/app/backend/data
+    ports:
+      - "3000:8080"
+    networks:
+      - ai-kiosk-network
+
+networks:
+  ai-kiosk-network:
+    driver: bridge
+
+volumes:
+  open-webui:
