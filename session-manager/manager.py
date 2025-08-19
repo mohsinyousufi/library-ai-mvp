@@ -114,20 +114,32 @@ def create_session(request: SessionRequest):
             "image": "kasmweb/chrome:1.15.0",
             "environment": {
                 "VNC_PW": "password",
-                "KASM_URL": "https://replit.com/~"
+                "KASM_URL": "https://replit.com/~",
+                "VNC_RESOLUTION": "1280x720",
+                "VNC_COL_DEPTH": "24",
+                "VNC_DISABLE_AUTH": "1",
+                "VNC_ENABLE_AUTH": "false"
             }
         },
         "codesandbox": {
             "image": "kasmweb/chrome:1.15.0", 
             "environment": {
                 "VNC_PW": "password",
-                "KASM_URL": "https://codesandbox.io"
+                "KASM_URL": "https://codesandbox.io",
+                "VNC_RESOLUTION": "1280x720",
+                "VNC_COL_DEPTH": "24",
+                "VNC_DISABLE_AUTH": "1",
+                "VNC_ENABLE_AUTH": "false"
             }
         },
         "chrome": {
             "image": "kasmweb/chrome:1.15.0",
             "environment": {
-                "VNC_PW": "password"
+                "VNC_PW": "password",
+                "VNC_RESOLUTION": "1280x720",
+                "VNC_COL_DEPTH": "24",
+                "VNC_DISABLE_AUTH": "1",
+                "VNC_ENABLE_AUTH": "false"
             }
         }
     }
@@ -144,7 +156,8 @@ def create_session(request: SessionRequest):
             detach=True,
             name=f"session-{session_id}",
             remove=False,
-            shm_size="512m"  # Required for browsers
+            shm_size="512m",  # Required for browsers
+            security_opt=["seccomp=unconfined"]  # Required for Chrome in containers
         )
         
         # Get assigned port
@@ -170,7 +183,7 @@ def create_session(request: SessionRequest):
         
         return SessionResponse(
             session_id=session_id,
-            url=f"http://localhost:{host_port}",
+            url=f"https://localhost:{host_port}",
             port=int(host_port)
         )
         
