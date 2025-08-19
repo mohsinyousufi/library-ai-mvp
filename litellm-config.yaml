@@ -13,3 +13,9 @@ model_list:
     litellm_params:
       model: openrouter/deepseek/deepseek-chat-v3-0324:free
       api_key: os.environ/OPENROUTER_API_KEY
+
+  - model_name: Google-gemma
+    litellm_params:
+      model: openrouter/google/gemma-3-4b-it:free
+      api_key: os.environ/OPENROUTER_API_KEY
+
