@@ -12,6 +12,7 @@ import requests
 from pathlib import Path
 from typing import Dict, Any
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import docker
@@ -44,8 +45,8 @@ DATA_DIR.mkdir(exist_ok=True)
 sessions_file = DATA_DIR / "sessions.json"
 
 class SessionRequest(BaseModel):
-    service: str
     user: str
+    service: str = "unified-dashboard"  # Optional, defaults to unified dashboard
 
 class SessionResponse(BaseModel):
     session_id: str
@@ -107,6 +108,20 @@ def root():
     """Health check endpoint"""
     return {"status": "ok", "service": "session-manager"}
 
+@app.get("/dashboard")
+def unified_dashboard():
+    """Serve the unified dashboard landing page"""
+    try:
+        template_path = Path(__file__).parent / "templates" / "unified_dashboard.html"
+        if template_path.exists():
+            return HTMLResponse(content=template_path.read_text(), status_code=200)
+        else:
+            logger.error(f"Dashboard template not found: {template_path}")
+            return HTMLResponse(content="<h1>Dashboard template not found</h1>", status_code=404)
+    except Exception as e:
+        logger.error(f"Error serving dashboard: {e}")
+        return HTMLResponse(content="<h1>Error loading dashboard</h1>", status_code=500)
+
 @app.get("/sessions")
 def list_sessions():
     """List all active sessions"""
@@ -116,65 +131,27 @@ def list_sessions():
 
 @app.post("/sessions", response_model=SessionResponse)
 def create_session(request: SessionRequest):
-    """Create a new containerized session"""
+    """Create a new unified containerized session"""
     cleanup_dead_containers()
     
     session_id = f"sess-{str(uuid.uuid4())[:8]}"
     
-    logger.info(f"Creating session {session_id} for service {request.service} and user {request.user}")
+    logger.info(f"Creating unified session {session_id} for user {request.user}")
     
-    # Service-specific container configurations
-    service_configs = {
-        "replit": {
-            "image": "kasmweb/chrome:1.15.0",
-            "environment": {
-                "VNC_PW": "password",
-                "KASM_URL": "https://replit.com/~",
-                "VNC_RESOLUTION": "1280x720",
-                "VNC_COL_DEPTH": "24",
-                "VNC_DISABLE_AUTH": "1",
-                "VNC_ENABLE_AUTH": "false",
-                "VNCOPTIONS": "-disableBasicAuth"
-            }
-        },
-        "suno": {
-            "image": "kasmweb/chrome:1.15.0", 
-            "environment": {
-                "VNC_PW": "password",
-                "KASM_URL": "https://suno.com/home",
-                "VNC_RESOLUTION": "1280x720",
-                "VNC_COL_DEPTH": "24",
-                "VNC_DISABLE_AUTH": "1",
-                "VNC_ENABLE_AUTH": "false",
-                "VNCOPTIONS": "-disableBasicAuth"
-            }
-        },
-        "chatbot": {
-            "image": "kasmweb/chrome:1.15.0", 
-            "environment": {
-                "VNC_PW": "password",
-                "KASM_URL": "http://host.docker.internal:3000",
-                "VNC_RESOLUTION": "1280x720",
-                "VNC_COL_DEPTH": "24",
-                "VNC_DISABLE_AUTH": "1",
-                "VNC_ENABLE_AUTH": "false",
-                "VNCOPTIONS": "-disableBasicAuth"
-            }
-        },
-        "chrome": {
-            "image": "kasmweb/chrome:1.15.0",
-            "environment": {
-                "VNC_PW": "password",
-                "VNC_RESOLUTION": "1280x720",
-                "VNC_COL_DEPTH": "24",
-                "VNC_DISABLE_AUTH": "1",
-                "VNC_ENABLE_AUTH": "false",
-                "VNCOPTIONS": "-disableBasicAuth"
-            }
+    # Unified configuration - all sessions use the same dashboard
+    config = {
+        "image": "kasmweb/chrome:1.15.0",
+        "environment": {
+            "VNC_PW": "password",
+            "KASM_URL": "http://session-manager:8080/dashboard",
+            "VNC_RESOLUTION": "1280x720",
+            "VNC_COL_DEPTH": "24",
+            "VNC_DISABLE_AUTH": "1",
+            "VNC_ENABLE_AUTH": "false",
+            "VNCOPTIONS": "-disableBasicAuth"
         }
     }
     
-    config = service_configs.get(request.service, service_configs["chrome"])
     port = 6901  # KasmVNC web port
     
     try:
@@ -204,7 +181,7 @@ def create_session(request: SessionRequest):
         sessions[session_id] = {
             "container_id": container.id,
             "port": int(host_port),
-            "service": request.service,
+            "service": "unified-dashboard",  # Always unified now
             "user": request.user,
             "container_name": container.name
         }

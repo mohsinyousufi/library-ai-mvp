@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library AI Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-description {
+            font-size: 1rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .share-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .share-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .share-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .service-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Library AI Dashboard</h1>
+            <p>Your unified workspace for AI development, creativity, and collaboration. Choose a service below to get started.</p>
+        </div>
+
+        <div class="services-grid">
+            <a href="https://replit.com" target="_blank" class="service-card" id="replit-card">
+                <span class="service-icon">🚀</span>
+                <div class="service-title">Replit</div>
+                <div class="service-description">Code, collaborate, and deploy projects in an instant online IDE</div>
+            </a>
+
+            <a href="https://suno.com" target="_blank" class="service-card" id="suno-card">
+                <span class="service-icon">🎵</span>
+                <div class="service-title">Suno</div>
+                <div class="service-description">Create music and audio content with AI-powered tools</div>
+            </a>
+
+            <a href="http://host.docker.internal:3000" target="_blank" class="service-card" id="chatbot-card">
+                <span class="service-icon">🤖</span>
+                <div class="service-title">AI Chatbot</div>
+                <div class="service-description">Interact with our intelligent conversational AI assistant</div>
+            </a>
+        </div>
+
+        <div class="share-section">
+            <h3 style="margin-bottom: 1.5rem;">📤 Share a Link</h3>
+            <form class="share-form" id="shareForm">
+                <div class="form-group">
+                    <label for="linkName">Link Name</label>
+                    <input type="text" id="linkName" name="name" placeholder="Optional: Give your link a name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="linkUrl">URL *</label>
+                    <input type="url" id="linkUrl" name="url" placeholder="https://example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="linkDescription">Description</label>
+                    <textarea id="linkDescription" name="description" rows="3" placeholder="Optional: Describe what this link is about"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="linkChannel">Slack Channel</label>
+                    <select id="linkChannel" name="channel">
+                        <option value="public-works">public-works</option>
+                        <option value="general">general</option>
+                        <option value="random">random</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="share-btn">Share to Slack</button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <p>Library AI MVP - Unified Development Environment</p>
+        </div>
+    </div>
+
+    <script>
+        // Handle share form submission
+        document.getElementById('shareForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const shareData = {
+                name: formData.get('name'),
+                url: formData.get('url'),
+                description: formData.get('description'),
+                channel: formData.get('channel')
+            };
+            
+            try {
+                const response = await fetch('/api/share-link', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(shareData)
+                });
+                
+                if (response.ok) {
+                    alert('Link shared successfully!');
+                    e.target.reset();
+                } else {
+                    const error = await response.text();
+                    alert('Failed to share link: ' + error);
+                }
+            } catch (error) {
+                alert('Error sharing link: ' + error.message);
+            }
+        });
+
+        // Add click tracking for service cards
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const service = this.id.replace('-card', '');
+                console.log(`Opening ${service} service`);
+            });
+        });
+    </script>
+</body>
+</html>
