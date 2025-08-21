@@ -122,11 +122,11 @@ def create_session(request: SessionRequest):
                 "VNCOPTIONS": "-disableBasicAuth"
             }
         },
-        "codesandbox": {
+        "suno": {
             "image": "kasmweb/chrome:1.15.0", 
             "environment": {
                 "VNC_PW": "password",
-                "KASM_URL": "https://codesandbox.io",
+                "KASM_URL": "https://suno.com/home",
                 "VNC_RESOLUTION": "1280x720",
                 "VNC_COL_DEPTH": "24",
                 "VNC_DISABLE_AUTH": "1",
