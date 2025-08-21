@@ -118,7 +118,8 @@ def create_session(request: SessionRequest):
                 "VNC_RESOLUTION": "1280x720",
                 "VNC_COL_DEPTH": "24",
                 "VNC_DISABLE_AUTH": "1",
-                "VNC_ENABLE_AUTH": "false"
+                "VNC_ENABLE_AUTH": "false",
+                "VNCOPTIONS": "-disableBasicAuth"
             }
         },
         "codesandbox": {
@@ -129,7 +130,8 @@ def create_session(request: SessionRequest):
                 "VNC_RESOLUTION": "1280x720",
                 "VNC_COL_DEPTH": "24",
                 "VNC_DISABLE_AUTH": "1",
-                "VNC_ENABLE_AUTH": "false"
+                "VNC_ENABLE_AUTH": "false",
+                "VNCOPTIONS": "-disableBasicAuth"
             }
         },
         "chrome": {
@@ -139,7 +141,8 @@ def create_session(request: SessionRequest):
                 "VNC_RESOLUTION": "1280x720",
                 "VNC_COL_DEPTH": "24",
                 "VNC_DISABLE_AUTH": "1",
-                "VNC_ENABLE_AUTH": "false"
+                "VNC_ENABLE_AUTH": "false",
+                "VNCOPTIONS": "-disableBasicAuth"
             }
         }
     }
