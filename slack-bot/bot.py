@@ -9,6 +9,7 @@ import requests
 import logging
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
+from flask import Flask, request, jsonify
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -16,6 +17,51 @@ logger = logging.getLogger(__name__)
 
 # Initialize Slack app for Socket Mode
 app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
+
+# Initialize Flask app for API endpoints
+flask_app = Flask(__name__)
+
+@flask_app.route("/api/share-link", methods=["POST"])
+def share_link_endpoint():
+    """API endpoint to share links to Slack"""
+    try:
+        data = request.get_json()
+        name = data.get("name", "")
+        url = data.get("url")
+        description = data.get("description", "")
+        channel = data.get("channel", "public-works")
+        
+        if not url:
+            return jsonify({"error": "URL is required"}), 400
+        if not name:
+            return jsonify({"error": "Name is required"}), 400
+        
+        # Format message with name
+        if name and description:
+            message = f"🔗 *Shared by {name}*\n{description}\n{url}"
+        else:
+            message = f"🔗 *Shared by {name}*\n{url}"
+
+        
+        # Post to Slack channel
+        client = app.client
+        response = client.chat_postMessage(
+            channel=f"#{channel}",
+            text=message,
+            unfurl_links=True,
+            unfurl_media=True
+        )
+        
+        if response["ok"]:
+            logger.info(f"Link shared successfully to #{channel}: {url}")
+            return jsonify({"message": "Link shared successfully"})
+        else:
+            logger.error(f"Failed to share link: {response.get('error')}")
+            return jsonify({"error": "Failed to share link"}), 500
+            
+    except Exception as e:
+        logger.error(f"Error in share_link_endpoint: {e}")
+        return jsonify({"error": str(e)}), 500
 
 @app.command("/session")
 def handle_session_command(ack, respond, command):
@@ -48,18 +94,28 @@ def handle_session_command(ack, respond, command):
                 message_text = f"🚀 Your Replit session is ready!\n" \
                               f"Access your Replit dashboard here: {session_data['url']}\n" \
                               f"Session ID: `{session_id}`\n" \
-                              f"💡 The browser will automatically load https://replit.com/~ for you!"
+                              f"💡 The browser will automatically load Replit for you!\n" \
+                              f"📤 Share links to #public-works: http://session-manager:8080/share/"
 
-            if service == "suno":
+            elif service == "suno":
                 message_text = f"🚀 Your Suno session is ready!\n" \
                               f"Access your Suno dashboard here: {session_data['url']}\n" \
                               f"Session ID: `{session_id}`\n" \
-                              f"💡 The browser will automatically load https://suno.com/~ for you!"
+                              f"💡 The browser will automatically load Suno for you!\n" \
+                              f"📤 Share links to #public-works: http://session-manager:8080/share/"
+
+            elif service == "chatbot":
+                message_text = f"🚀 Your Chatbot session is ready!\n" \
+                              f"Access your Chatbot dashboard here: {session_data['url']}\n" \
+                              f"Session ID: `{session_id}`\n" \
+                              f"💡 The browser will automatically load Chatbot for you!\n" \
+                              f"📤 Share links to #public-works: http://session-manager:8080/share/"
 
             else:
                 message_text = f"🚀 Your {service} session is ready!\n" \
                               f"Access it here: {session_data['url']}\n" \
-                              f"Session ID: `{session_id}`"
+                              f"Session ID: `{session_id}`\n" \
+                              f"📤 Share links to #public-works: http://session-manager:8080/share/"
             
             # Create interactive message with End Session button
             blocks = [
@@ -178,11 +234,21 @@ if __name__ == "__main__":
         exit(1)
         
     try:
-        # Use Socket Mode handler
-        handler = SocketModeHandler(app, os.environ.get("SLACK_APP_TOKEN"))
+        import threading
         
-        logger.info("Slack bot starting in Socket Mode...")
-        handler.start()
+        # Start Socket Mode handler in a separate thread
+        def start_socket_mode():
+            handler = SocketModeHandler(app, os.environ.get("SLACK_APP_TOKEN"))
+            logger.info("Slack bot starting in Socket Mode...")
+            handler.start()
+        
+        socket_thread = threading.Thread(target=start_socket_mode, daemon=True)
+        socket_thread.start()
+        
+        # Start Flask app for API endpoints
+        logger.info("Starting Flask API server on port 3000...")
+        flask_app.run(host="0.0.0.0", port=3000, debug=False)
+        
     except Exception as e:
         logger.error(f"Failed to start Slack bot: {e}")
         exit(1)
