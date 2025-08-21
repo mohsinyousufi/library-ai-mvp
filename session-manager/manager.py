@@ -8,9 +8,11 @@ import os
 import json
 import uuid
 import logging
+import requests
 from pathlib import Path
 from typing import Dict, Any
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import docker
 import uvicorn
@@ -20,6 +22,13 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Session Manager", version="1.0.0")
+
+# Mount the share page
+try:
+    app.mount("/share", StaticFiles(directory="share-page", html=True), name="share")
+    logger.info("Share page mounted successfully")
+except Exception as e:
+    logger.error(f"Failed to mount share page: {e}")
 
 # Docker client
 try:
@@ -42,6 +51,12 @@ class SessionResponse(BaseModel):
     session_id: str
     url: str
     port: int
+
+class LinkShareRequest(BaseModel):
+    name: str = ""
+    url: str
+    description: str = ""
+    channel: str = "public-works"
 
 def load_sessions() -> Dict[str, Any]:
     """Load sessions from file"""
@@ -134,6 +149,18 @@ def create_session(request: SessionRequest):
                 "VNCOPTIONS": "-disableBasicAuth"
             }
         },
+        "chatbot": {
+            "image": "kasmweb/chrome:1.15.0", 
+            "environment": {
+                "VNC_PW": "password",
+                "KASM_URL": "http://host.docker.internal:3000",
+                "VNC_RESOLUTION": "1280x720",
+                "VNC_COL_DEPTH": "24",
+                "VNC_DISABLE_AUTH": "1",
+                "VNC_ENABLE_AUTH": "false",
+                "VNCOPTIONS": "-disableBasicAuth"
+            }
+        },
         "chrome": {
             "image": "kasmweb/chrome:1.15.0",
             "environment": {
@@ -160,7 +187,8 @@ def create_session(request: SessionRequest):
             name=f"session-{session_id}",
             remove=False,
             shm_size="512m",  # Required for browsers
-            security_opt=["seccomp=unconfined"]  # Required for Chrome in containers
+            security_opt=["seccomp=unconfined"],  # Required for Chrome in containers
+            network="library-ai-mvp_app-network"  # Connect to the same network
         )
         
         # Get assigned port
@@ -193,6 +221,35 @@ def create_session(request: SessionRequest):
     except Exception as e:
         logger.error(f"Error creating session {session_id}: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to create session: {str(e)}")
+
+@app.post("/api/share-link")
+def share_link_to_slack(request: LinkShareRequest):
+    """Share a link to Slack channel"""
+    try:
+        # Get Slack bot URL from environment or use default
+        slack_bot_url = os.environ.get("SLACK_BOT_URL", "http://slack-bot:3000")
+        
+        # Send request to Slack bot to post message
+        response = requests.post(
+            f"{slack_bot_url}/api/share-link",
+            json={
+                "name": request.name,
+                "url": request.url,
+                "description": request.description,
+                "channel": request.channel
+            },
+            timeout=10
+        )
+        
+        if response.ok:
+            return {"message": "Link shared successfully"}
+        else:
+            logger.error(f"Failed to share link to Slack: {response.text}")
+            raise HTTPException(status_code=500, detail="Failed to share link to Slack")
+            
+    except Exception as e:
+        logger.error(f"Error sharing link: {e}")
+        raise HTTPException(status_code=500, detail=f"Error sharing link: {str(e)}")
 
 @app.delete("/sessions/{session_id}")
 def cleanup_session(session_id: str):
