@@ -8,8 +8,6 @@ services:
       - ./.env
     ports:
       - "4000:4000"
-    networks:
-      - app-network
 
 
   openwebui-app:
@@ -29,8 +27,6 @@ services:
       - open-webui:/app/backend/data
     ports:
       - "3000:8080"
-    networks:
-      - app-network
 
   slack-bot:
     image: python:3.11-slim
@@ -39,40 +35,28 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /app
     command: >
-      sh -c "pip install slack_bolt requests flask &&
+      sh -c "pip install slack_bolt requests &&
              python bot.py"
     env_file:
       - ./.env
     environment:
       - SESSION_MANAGER_URL=http://session-manager:8080
-    ports:
-      - "3001:3000"
-    networks:
-      - app-network
 
   session-manager:
     image: python:3.11-slim
     volumes:
       - ./session-manager:/app
-      - ./share-page:/app/share-page
       - /var/run/docker.sock:/var/run/docker.sock
       - session-data:/data
     working_dir: /app
     command: >
-      sh -c "pip install fastapi uvicorn docker requests &&
+      sh -c "pip install fastapi uvicorn docker &&
              python manager.py"
     ports:
       - "8080:8080"
     environment:
       - DATA_DIR=/data
-      - SLACK_BOT_URL=http://slack-bot:3000
-    networks:
-      - app-network
 
 volumes:
   open-webui:
   session-data:
-
-networks:
-  app-network:
-    driver: bridge
