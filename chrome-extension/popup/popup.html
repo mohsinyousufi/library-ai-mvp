@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <title>PublicPass Session Share</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Share Session</h1>
+      <section class="info">
+        <div>Active site:</div>
+        <div id="active-host" class="monospace">Loading…</div>
+      </section>
+      <form id="share-form">
+        <label>
+          Recipient username
+          <input type="text" id="recipient-username" required placeholder="Recipient username" />
+        </label>
+        <label>
+          Session duration
+          <select id="session-duration">
+            <option value="0">Until manually logout</option>
+            <option value="1800">30 minutes</option>
+            <option value="7200">2 hours</option>
+            <option value="28800">8 hours</option>
+          </select>
+        </label>
+ 
+        <button type="submit" id="share-button">Encrypt & Share</button>
+      </form>
+      <section id="result" hidden>
+        <h2>Share link</h2>
+        <p class="monospace" id="share-url"></p>
+        <p id="expiry"></p>
+        <button id="copy-link">Copy link</button>
+      </section>
+      <section class="inbox-actions">
+        <button id="check-inbox" type="button">Check now</button>
+      </section>
+      <section id="errors" class="error" role="alert" hidden></section>
+      <footer>
+        <a href="#" id="open-options">Extension settings</a>
+      </footer>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

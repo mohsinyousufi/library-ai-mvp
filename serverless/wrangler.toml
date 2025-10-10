@@ -1,0 +1,33 @@
+name = "publicpass"
+main = "worker.js"
+compatibility_date = "2024-10-01"
+
+[vars]
+BASE_URL = "https://publicpass.mohsin-yousufi.workers.dev"
+ALLOWED_ORIGINS = "*"
+DEFAULT_TTL = 600
+MAX_TTL = 3600
+MAX_PAYLOAD_BYTES = 8388608
+ADMIN_USERS = "*"
+
+[[kv_namespaces]]
+binding = "USERS_KV"
+id = "5ef806ecc58d4a9fa8ff278a7635a67e"
+
+[[kv_namespaces]]
+binding = "SHARES_KV"
+id = "311ff57824c04655a142182e1700be9d"
+
+
+[[kv_namespaces]]
+binding = "INBOX_KV"
+id = "c24a58e93b40450a8b71d468d81c3b98"
+
+[durable_objects]
+bindings = [
+  { name = "SHARE_MANAGER", class_name = "ShareManager" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ShareManager"]
