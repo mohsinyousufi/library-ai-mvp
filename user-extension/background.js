@@ -289,7 +289,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 });
 
 // Periodic inbox polling to auto-apply incoming shares and revokes
-chrome.alarms.create('pp-inbox-poll', { periodInMinutes: 1 });
+chrome.alarms.create('pp-inbox-poll', { periodInMinutes: 3 });
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'pp-inbox-poll') {
     pollInboxOnce().catch(() => {});

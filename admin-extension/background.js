@@ -268,7 +268,7 @@ async function pollRequestsAndNotify() {
 	} catch (_) {}
 }
 
-chrome.alarms.create('pp-requests-poll', { periodInMinutes: 1 });
+chrome.alarms.create('pp-requests-poll', { periodInMinutes: 3 });
 chrome.alarms.onAlarm.addListener((alarm) => {
 	if (alarm.name === 'pp-requests-poll') {
 		pollRequestsAndNotify().catch(() => {});
