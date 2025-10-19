@@ -20,48 +20,70 @@
             </div>
         </header>
 
+        <!-- Chat bar (inspired by publicai.co/chat) -->
+        <section class="chat-bar">
+            <form class="chat-form" action="https://publicai.co/chat" method="get">
+                <input 
+                    type="text" 
+                    name="q"
+                    class="chat-input" 
+                    placeholder="Ask me anything..." 
+                    aria-label="Chat with AI"
+                />
+                <button type="submit" class="chat-submit" aria-label="Send message">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+        </section>
+
         <!-- Framed content area -->
         <section class="frame">
             <!-- Grid of services (borders like the mock) -->
             <div class="services-grid">
                 <a href="https://replit.com" target="_blank" rel="noopener noreferrer" class="service-card card--replit">
-                    <h2 class="service-title">Replit</h2>
+                    <h2 class="service-title">Code</h2>
+                    <p class="service-desc-current">Replit</p>
                     <p class="service-desc">Code, collaborate, and deploy projects in an instant online IDE</p>
                 </a>
 
                 <a href="https://chat.publicai.co/" target="_blank" rel="noopener noreferrer" class="service-card card--chatbot">
-                    <h2 class="service-title">AI Chatbot</h2>
+                    <h2 class="service-title">Chat</h2>
+                    <p class="service-desc-current">Public AI Chat</p>
                     <p class="service-desc">Interact with our intelligent conversational AI assistant</p>
                 </a>
 
                 <a href="https://www.midjourney.com/" target="_blank" rel="noopener noreferrer" class="service-card card--midjourney">
-                    <span class="service-emoji" aria-hidden="true"></span>
-                    <h2 class="service-title">Midjourney</h2>
+                    <h2 class="service-title">Images</h2>
+                    <p class="service-desc-current">Midjourney</p>
                     <p class="service-desc">Generate stunning images with advanced AI</p>
                 </a>
 
                 <a href="https://suno.com" target="_blank" rel="noopener noreferrer" class="service-card card--suno">
-                    <h2 class="service-title">Suno</h2>
+                    <h2 class="service-title">Music</h2>
+                    <p class="service-desc-current">Suno</p>
                     <p class="service-desc">Create music and audio content with AI‑powered tools</p>
                 </a>
 
                 <!-- Spans two columns to match the wide Nano Banana tile -->
                 <a href="https://nanobanana.io" target="_blank" rel="noopener noreferrer" class="service-card card--nano">
-                    <h2 class="service-title service-title--xl">Nano Banana</h2>
+                    <h2 class="service-title service-title--xl">Creative Suite</h2>
+                    <p class="service-desc-current">Nano Banana</p>
                     <p class="service-desc">AI-powered creative tools for images and more</p>
                 </a>
 
                 <!-- Additional services requested -->
                 <a href="https://runwayml.com/" target="_blank" rel="noopener noreferrer" class="service-card card--runway">
-                    <span class="service-emoji" aria-hidden="true"></span>
-                    <h2 class="service-title">RunwayML</h2>
+                    <h2 class="service-title">Videos</h2>
+                    <p class="service-desc-current">RunwayML</p>
                     <p class="service-desc">Create and edit video, images, and more with AI</p>
                 </a>
 
-                <a href="https://commonvoice.mozilla.org/" target="_blank" rel="noopener noreferrer" class="service-card card--mozilla">
-                    <span class="service-emoji" aria-hidden="true"></span>
-                    <h2 class="service-title">Mozilla Common Voice</h2>
-                    <p class="service-desc">Use Mozilla Common Voice for your AI projects</p>
+                <a href="https://gamma.app/" target="_blank" rel="noopener noreferrer" class="service-card card--mozilla">
+                    <h2 class="service-title">Presentations</h2>
+                    <p class="service-desc-current">Gamma</p>
+                    <p class="service-desc">Create beautiful presentations with AI-powered design</p>
                 </a>
             </div>
 
