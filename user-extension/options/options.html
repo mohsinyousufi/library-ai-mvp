@@ -10,23 +10,13 @@
       <h1>User Settings</h1>
       <form id="settings-form" class="card">
         <label>
-          PublicPass API Base URL
-          <input type="url" id="server-url" required placeholder="https://api.publicpass.example" />
-        </label>
-        <label>
-          Your Username
+          Kiosk Name
           <input type="text" id="current-username" required />
-        </label>
-        <label>
-          Ask before accepting links
-          <select id="accept-prompt">
-            <option value="on">On</option>
-            <option value="off">Off</option>
-          </select>
         </label>
         <button type="submit">Save</button>
         <div id="status" role="status" aria-live="polite"></div>
       </form>
+      
       <section class="identity card" aria-live="polite">
         <h2>Current ID</h2>
         <p id="identity-status">Checking identity…</p>

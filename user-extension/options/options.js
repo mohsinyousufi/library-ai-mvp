@@ -21,7 +21,6 @@ function setStatus(message, isError = false) {
 
 async function loadSettings() {
   const stored = await chrome.storage.sync.get(DEFAULT_SETTINGS);
-  document.getElementById('server-url').value = stored.serverBaseUrl;
   document.getElementById('current-username').value = stored.currentUsername;
   document.getElementById('accept-prompt').value = stored.acceptPrompt || 'on';
 }
@@ -34,10 +33,11 @@ async function loadIdentity() {
 
 async function saveSettings(e) {
   e.preventDefault();
-  const serverBaseUrl = document.getElementById('server-url').value.trim();
+  // Preserve stored serverBaseUrl; field removed from UI
+  const prev = await chrome.storage.sync.get(DEFAULT_SETTINGS);
   const currentUsername = document.getElementById('current-username').value.trim();
   const acceptPrompt = document.getElementById('accept-prompt').value;
-  await chrome.storage.sync.set({ serverBaseUrl, currentUsername, acceptPrompt });
+  await chrome.storage.sync.set({ serverBaseUrl: prev.serverBaseUrl, currentUsername, acceptPrompt });
   setStatus('Settings saved.');
   chrome.runtime.sendMessage({ type: 'register-identity' }, () => {});
 }
