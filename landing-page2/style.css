@@ -222,6 +222,80 @@ body{
 
 /* remove this old rule that forced the bar to look black */
 .bottom-nav {color: var(--bg);}
+/* Content pages */
+.content-page {
+  background: var(--bg);
+  padding: 40px;
+  min-height: 400px;
+}
+
+.content-page h1 {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.content-section {
+  margin-bottom: 32px;
+}
+
+.content-section h2 {
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--red);
+}
+
+.content-section h3 {
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 700;
+  margin-bottom: 8px;
+  margin-top: 20px;
+}
+
+.content-section p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+
+.content-section ul {
+  margin-left: 20px;
+  margin-bottom: 16px;
+}
+
+.content-section li {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.content-section strong {
+  font-weight: 700;
+}
+
+/* FAQ specific styles */
+.faq-section {
+  margin-bottom: 40px;
+}
+
+.faq-item {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-item h3 {
+  color: var(--ink);
+  margin-top: 0;
+}
+
 /* Footer */
 .footer{ text-align:center; color:#ffffff; margin-top:12px; font-size:14px; }
 
