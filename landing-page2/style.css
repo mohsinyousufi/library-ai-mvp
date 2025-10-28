@@ -152,7 +152,10 @@ body{
 .card--suno{ grid-column: span 4; grid-row: span 2; }
 .card--nano{ grid-column: span 8; grid-row: span 2; }
 .card--runway{ grid-column: span 5; grid-row: span 2; }
-.card--mozilla{ grid-column: span 9; grid-row: span 2; }
+.card--presentations{ grid-column: span 9; grid-row: span 2; }
+/* New bottom row cards */
+.card--datasets{ grid-column: span 9; grid-row: span 2; }
+.card--feature{ grid-column: span 5; grid-row: span 2; }
 
 /* Typography */
 .service-title{ margin:0 0 8px 0; font-size: clamp(36px, 5vw, 64px); font-weight:800; letter-spacing:.2px; }
@@ -302,14 +305,14 @@ body{
 /* Responsive */
 @media (max-width: 1100px){
   .services-grid{ grid-template-columns: repeat(8, 1fr); grid-auto-rows: 100px; }
-  .card--replit, .card--chatbot, .card--midjourney, .card--suno, .card--runway{ grid-column: span 4; grid-row: span 3; }
+  .card--replit, .card--chatbot, .card--midjourney, .card--suno, .card--runway, .card--datasets, .card--feature{ grid-column: span 4; grid-row: span 3; }
   .card--nano{ grid-column: span 8; grid-row: span 4; }
   .card--mozilla{ grid-column: span 8; grid-row: span 3; }
 }
 
 @media (max-width: 720px){
   .services-grid{ grid-template-columns: repeat(2, 1fr); grid-auto-rows: 110px; }
-  .card--replit, .card--chatbot, .card--midjourney, .card--suno, .card--runway, .card--mozilla{ grid-column: span 2; grid-row: span 2; }
+  .card--replit, .card--chatbot, .card--midjourney, .card--suno, .card--runway, .card--presentations, .card--datasets, .card--feature{ grid-column: span 2; grid-row: span 2; }
   .card--nano{ grid-column: span 2; grid-row: span 3; }
   .service-title--xl{ font-size: clamp(32px, 10vw, 64px); }
 }
