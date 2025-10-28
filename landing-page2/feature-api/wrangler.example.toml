@@ -1,0 +1,10 @@
+name = "paint-lib-feature-tracker"
+main = "worker.js"
+compatibility_date = "2024-10-01"
+
+# Public repo friendly: this file is just an example. Duplicate it as wrangler.toml
+# and bind your own KV namespace. Do NOT commit wrangler.toml with real IDs if private.
+
+[[kv_namespaces]]
+binding = "FEATURES_KV"
+# id = "<your_kv_namespace_id>"   # add your KV id here locally, keep this file public-safe
