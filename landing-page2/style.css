@@ -116,7 +116,7 @@ body{
 
 
 
-.brand-mark{ display:inline-block; width:50%; background:none; border-radius:2px; }
+.brand-mark{ display:inline-block; width:20%; background:none; border-radius:2px; }
 
 
 /* Framed content (Mondrian-style outer border and inner lines via gap) */
